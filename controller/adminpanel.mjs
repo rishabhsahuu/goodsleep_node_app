@@ -16,7 +16,7 @@ const insertdata = (req, res, next) => {
             // const url = req.protocol + "://" + req.get("host");
 
             // This is for testing perpose only
-            const url = req.protocol + "://" + "192.168.2.117:8000" ;
+            const url = req.protocol + "://" + req.get("host") ;
 
 
             const audiopathoffile = where == "uploads" ? "/" + req.files["audiofilepath"][0]["path"].replace(/\\/g, "/") : "";
@@ -79,51 +79,7 @@ const insertdata = (req, res, next) => {
             }
 
 
-            // if (where == "categories") {
-
-            //     collection.updateOne({ token: "token" }, {
-            //         $push: {
-            //             "categories": { "name": name, "categoriespic": categoriespathoffile != undefined ? url + categoriespathoffile : "" }
-            //         }
-            //     }, (error, data) => {
-            //         if (error) {
-            //             res.send([{ 'error': "categories update error" }])
-            //         } else if (data["acknowledged"] == true) {
-            //             res.send({
-            //                 "upload": true
-            //             });
-            //         } else { res.send(data); }
-            //     })
-
-            // }
-            // else if (where == "uploads") {
-            //     collection.updateOne({ token: "token" },
-            //         {
-            //             $push: {
-            //                 [categories]: {
-                                // "audioname": audioname,
-                                // "audiofilepath": audiopathoffile != "" ? url + audiopathoffile : "",
-                                // "imagefilepath": imagepathoffile != "" ? url + imagepathoffile : "",
-                                // "rawaudioname": path.basename(audiopathoffile),
-                                // "rawimagename": path.basename(imagepathoffile)
-            //                     , "categories": categories
-            //                 }
-            //             }
-
-            //         },
-            //         (error, data) => {
-            //             if (error) {
-            //                 res.send(error);
-            //             } else {
-
-            //                 res.send(`${categories} lsit is updated`);
-            //             }
-            //         }
-            //     );
-            // }
-
-
-
+           
 
 
 
