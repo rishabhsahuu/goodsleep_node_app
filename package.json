@@ -1,0 +1,21 @@
+{
+  "name": "bettersleep",
+  "version": "1.0.0",
+  "description": "This is Better Sleep Backend App ",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.mjs"
+  },
+  "author": "Rishabh Sahu",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "email-validator": "^2.0.4",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.6",
+    "multer": "^1.4.4",
+    "nodemon": "^2.0.15"
+  }
+}
