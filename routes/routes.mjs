@@ -1,12 +1,15 @@
 import express from "express";
 const routes = express();
-import {insertdata, getalldata,deletedata,adminpanel} from "../controller/adminpanel.mjs";
+import {insertdata, getalldata,deletedata,adminpanel, deletecategories} from "../controller/adminpanel.mjs";
 import {insertusers,login,updateusers,deleteusers,searchdata} from "../controller/users.mjs"
 
 //sending uploading data to server from admin App
 routes.post("/",insertdata)
 routes.get("",getalldata)
 routes.delete("",deletedata)
+
+// delete categories from server database
+routes.delete("/deletecategories",deletecategories)
 
 //search audios
 routes.post("/search",searchdata);

@@ -1,4 +1,4 @@
-export { insertdata, getalldata, deletedata, adminpanel }
+export { insertdata, getalldata, deletedata, adminpanel,deletecategories }
 import { audio } from "../middleware/uploadsaudio.mjs"
 import { collection, adminpaneldb, usersdata } from "../DataBase/database.mjs";
 import path from "path";
@@ -176,6 +176,23 @@ const adminpanel = async (req, res) => {
     }
 
 };
+
+
+const deletecategories = (req,res)=>{
+const { name} =req.body;
+
+console.log(name);
+    
+
+    collection.deleteOne({"name":name},(error,data)=>{
+        if (error) {
+            res.send([{"error": "error while deleting categories"}]);           
+        } else {
+            console.log(data);
+            res.send(data);            
+        }
+    });
+}
 
 
 
