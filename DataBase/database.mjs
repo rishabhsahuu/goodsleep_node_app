@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { mongodburl } from "../DataBase/urls.mjs"
-mongoose.connect(process.env.PORT || mongodburl, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( mongodburl);
 
 
 const collection = mongoose.model("uploads", {
