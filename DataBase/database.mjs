@@ -9,7 +9,7 @@ const collection = mongoose.model("uploads", {
     // imagefilepath: String,
     // rawaudioname: String,
     // rawimagename: String
-    name:{
+    categories:{
         type:String,
         unique:true
     },

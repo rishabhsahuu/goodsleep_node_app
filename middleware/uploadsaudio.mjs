@@ -1,5 +1,10 @@
 import path from "path";
 import multer from "multer";
+import fs from "fs";
+
+
+
+
 
 
 const audiosstorage = multer.diskStorage(
@@ -8,10 +13,29 @@ const audiosstorage = multer.diskStorage(
         // cb(null,"./audios");
         const audioext = [".mp3",".wav",".aac"];
         const imageext = [".png",".jpg",".jpeg"];
+        const {categories} = req.body;
+        // if (audioext.includes(path.extname(file.originalname))) {
+        //     cb(null,"./audios");
+        // }else if (imageext.includes(path.extname(file.originalname))){
+        //     cb(null,"./images");
+        // }
+
+        const imagepath = "./images/" + categories;
+        const audiopath = "./audios/" + categories;
+
+        if (!fs.existsSync(imagepath)) {            
+            fs.mkdirSync("./images/" + categories);} 
+
+        if (!fs.existsSync(audiopath)) {            
+            fs.mkdirSync("./audios/" + categories
+            );
+        } 
+        
+
         if (audioext.includes(path.extname(file.originalname))) {
-            cb(null,"./audios");
+            cb(null,"./audios/" + categories);
         }else if (imageext.includes(path.extname(file.originalname))){
-            cb(null,"./images");
+            cb(null,"./images/" +categories);
         }
     },
     filename (req,file,callback){

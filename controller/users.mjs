@@ -128,13 +128,13 @@ const updateusers = (req, res) => {
                             if (error) {
                                 res.send(error);
                             } else {
-                                await usersdata.updateOne({ "token": token }, { "password": hash }, (error, data) => {
+                                 usersdata.updateOne({ "token": token }, { "password": hash }, (error, data) => {
                                     if (error) {
                                         res.send(error);
                                     } else {
                                         res.send(data);
                                     }
-                                }).clone();
+                                });
                             }
                         });
 

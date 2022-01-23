@@ -1,4 +1,4 @@
-export { insertdata, getalldata, deletedata, adminpanel,deletecategories }
+export { insertdata, getalldata, deletedata, adminpanel, deletecategories }
 import { audio } from "../middleware/uploadsaudio.mjs"
 import { collection, adminpaneldb, usersdata } from "../DataBase/database.mjs";
 import path from "path";
@@ -11,12 +11,12 @@ const insertdata = (req, res, next) => {
         if (error) {
             next(error);
         } else {
-            const { audioname, categories, where, name } = req.body;
+            const { audioname, categories, where } = req.body;
             // This is for full url 
             // const url = req.protocol + "://" + req.get("host");
 
             // This is for testing perpose only
-            const url = req.protocol + "://" + req.get("host") ;
+            const url = req.protocol + "://" + req.get("host");
 
 
             const audiopathoffile = where == "uploads" ? "/" + req.files["audiofilepath"][0]["path"].replace(/\\/g, "/") : "";
@@ -24,62 +24,63 @@ const insertdata = (req, res, next) => {
             const categoriespathoffile = where == "categories" ? "/" + req.files["thumbnail"][0]["path"].replace(/\\/g, "/") : "";
 
 
-           
+
             if (where == "categories") {
                 collection.insertMany([{
-                    "name": name,
+                    "categories": categories,
                     "thumbnail": url + categoriespathoffile,
                     "data": []
 
-                }],(error,data)=>{
+                }], (error, data) => {
                     if (error) {
-                        
+
                         res.send([{
                             'error': "insertdata error"
                         }]);
-                    } else if (data.length <=0) {
+                    } else if (data.length <= 0) {
                         res.send([{
-                            'error':"unable to insert data to database"
+                            'error': "unable to insert data to database"
                         }]);
-                        
-                    }else{
+
+                    } else {
                         res.send([{
-                            "data":"categories updated"
+                            "data": "categories updated"
                         }])
                     }
                 });
             } else if (where == "uploads") {
-                collection.updateOne({"name": categories},{
-                    $push:{
-                        "data":{
+                // console.log(audiopathoffile);
+                collection.updateOne({ "categories": categories }, {
+                    $push: {
+                        "data": {
                             "audioname": audioname,
-                                "audiofilepath": audiopathoffile != "" ? url + audiopathoffile : "",
-                                "imagefilepath": imagepathoffile != "" ? url + imagepathoffile : "",
-                                "rawaudioname": path.basename(audiopathoffile),
-                                "rawimagename": path.basename(imagepathoffile),
-                                "categories":categories
+                            "audiofilepath": audiopathoffile != "" ? url + audiopathoffile : "",
+                            "imagefilepath": imagepathoffile != "" ? url + imagepathoffile : "",
+                            "rawaudioname": path.basename(audiopathoffile),
+                            "rawimagename": path.basename(imagepathoffile),
+                            "categories": categories
 
                         }
                     }
-                },(error,data)=>{
+                }, (error, data) => {
                     if (error) {
                         res.send([{
-                            "error":"updateOne error"
+                            "error": "updateOne error"
                         }])
-                    } else if(data.length <=0){
+                    } else if (data.length <= 0) {
                         res.send([{
                             "error": "update one data not comming"
                         }])
-                    }else{
+                    } else {
                         res.send([{
-                            "data":"file uploaded succesfully"
+                            "data": "file uploaded succesfully"
                         }])
                     }
                 });
             }
 
 
-           
+
 
 
 
@@ -88,7 +89,7 @@ const insertdata = (req, res, next) => {
 };
 
 const getalldata = async (req, res) => {
-     collection.find((error, data) => {
+    collection.find((error, data) => {
         if (error) {
             res.send("error while calling data from database")
         } else {
@@ -110,35 +111,35 @@ const deletedata = async (req, res) => {
     const audiofilepath = "./audios/" + rawaudioname;
     const imagefilepath = "./images/" + rawimagename;
 
-   
-         collection.updateOne({ "name": categories }, {
-            $pull:
-            {
-                "data": {
-                    "rawaudioname": rawaudioname
-                }
 
+    collection.updateOne({ "name": categories }, {
+        $pull:
+        {
+            "data": {
+                "rawaudioname": rawaudioname
             }
-        },
-            (error, result) => {
-                if (error) {
-                    res.send(error);
-                } else {
 
-                    fs.unlink(audiofilepath, (req, res) => {
-                        console.log("audio deleted");
-                    });
+        }
+    },
+        (error, result) => {
+            if (error) {
+                res.send(error);
+            } else {
 
-                    fs.unlink(imagefilepath, (req, res) => {
-                        console.log(" image deleted");
-                    });
+                fs.unlink(audiofilepath, (req, res) => {
+                    console.log("audio deleted");
+                });
 
-                    res.send("This audio is deleted");
-                }
+                fs.unlink(imagefilepath, (req, res) => {
+                    console.log(" image deleted");
+                });
+
+                res.send("This audio is deleted");
             }
-        )
+        }
+    )
 
-    
+
 
 
 };
@@ -178,18 +179,37 @@ const adminpanel = async (req, res) => {
 };
 
 
-const deletecategories = (req,res)=>{
-const { name} =req.body;
+const deletecategories = (req, res) => {
+    const {  categories } = req.body;
 
-console.log(name);
-    
+    // const imagefilepath = "./images/" + rawimagename;
 
-    collection.deleteOne({"name":name},(error,data)=>{
+
+    collection.deleteOne({ "categories": categories }, (error, data) => {
         if (error) {
-            res.send([{"error": "error while deleting categories"}]);           
+            res.send([{ "error": "error while deleting categories" }]);
         } else {
-            console.log(data);
-            res.send(data);            
+            if (fs.existsSync("./audios/" + categories)) {
+                fs.rm("./audios/" + categories,{recursive:true}, (error, data) => {
+                    if (error) {
+                        res.send({
+                            "error": `./audios/${categories} unable to delete`
+                        });
+                    }
+                });
+            }
+
+            fs.rm("./images/" + categories,{recursive:true},(error, data) => {
+                if (error) {
+                    res.send({
+                        "error": `./images/${categories} unable to delete`
+                    });
+                }else{
+                    res.send(data
+                        
+                    );
+                }
+            });
         }
     });
 }
