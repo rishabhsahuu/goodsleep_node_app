@@ -108,8 +108,8 @@ const deletedata = async (req, res) => {
     const { rawaudioname, rawimagename, categories } = req.body;
     // console.log(rawaudioname);
     // const data = await collection.findByIdAndDelete(id);
-    const audiofilepath = "./audios/" + rawaudioname;
-    const imagefilepath = "./images/" + rawimagename;
+    const audiofilepath = "./audios/" + categories +"/"+ rawaudioname;
+    const imagefilepath = "./images/" + categories +"/"+  rawimagename;
 
 
     collection.updateOne({ "name": categories }, {
