@@ -35,7 +35,7 @@ const insertdata = (req, res, next) => {
                     if (error) {
 
                         res.send([{
-                            'error': "insertdata error"
+                            'error': error
                         }]);
                     } else if (data.length <= 0) {
                         res.send([{
@@ -111,20 +111,22 @@ const deletedata = async (req, res) => {
     const audiofilepath = "./audios/" + categories +"/"+ rawaudioname;
     const imagefilepath = "./images/" + categories +"/"+  rawimagename;
 
-
-    collection.updateOne({ "name": categories }, {
+console.log(rawaudioname);
+     collection.updateOne({ "categories": categories }, {
         $pull:
         {
-            "data": {
+            data: {
                 "rawaudioname": rawaudioname
             }
 
         }
-    },
+    },{safe:true},
         (error, result) => {
             if (error) {
                 res.send(error);
             } else {
+
+                console.log(result);
 
                 fs.unlink(audiofilepath, (req, res) => {
                     console.log("audio deleted");
